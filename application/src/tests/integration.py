@@ -6,7 +6,7 @@ import requests
 class IntegrationTestCase(TestCase):
     base_url = 'http://localhost:5000/pokemon/{pokemonName}'
 
-    def test_charizard_description(self):
+    def test_retrieve_charizard_description(self):
         url = self.base_url.format(pokemonName='charizard')
         r = requests.get(url=url)
         self.assertEqual(200, r.status_code)

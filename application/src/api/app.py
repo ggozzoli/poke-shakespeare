@@ -8,6 +8,8 @@ from flask_injector import FlaskInjector
 from flask_restful import Api
 from injector import Injector, Module
 
+from api.resources.pokemon_description import PokemonDescriptionResource
+
 with open(os.path.join(os.path.dirname(__file__), '..', 'config', 'logging.conf'), 'rb') as logging_config_file:
     config.dictConfig(json.loads(logging_config_file.read()))
 
@@ -20,6 +22,7 @@ class Application(Flask):
         super().__init__(__name__)
 
         self._api = ApplicationApi(self)
+        self._api.add_resource(PokemonDescriptionResource, '/pokemon/<string:pokemon_name>', endpoint='pokemon_desc')
 
         if not injector:
             injector = Injector(modules=[ApplicationModule()])
