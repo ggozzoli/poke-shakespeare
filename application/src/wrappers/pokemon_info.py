@@ -1,10 +1,28 @@
+import logging
+
+import requests
+
 from core.wrappers import PokemonInfoWrapper
+
+logger = logging.getLogger(f'{__name__}')
 
 
 class PokemonInfoWrapperImpl(PokemonInfoWrapper):
 
     def __init__(self):
-        url = 'https://pokeapi.co/api/v2/pokemon-species/{pokemonName}'
+        self._url = 'https://pokeapi.co/api/v2/pokemon-species/{pokemonName}'
 
     def get_description(self, pokemon_name: str) -> str:
-        pass
+        logger.debug(f'Get pokemon description (pokemon_name: {pokemon_name}).')
+
+        url = self._url.format(pokemonName=pokemon_name)
+        r = requests.get(url=url)
+        description = self._extract_description(response=r.json())
+        return description
+
+    @staticmethod
+    def _extract_description(response: dict) -> str:
+        descriptions = response.get('flavor_text_entries')
+        for description in descriptions:
+            if description.get('language').get('name') == 'en':
+                return description.get('flavor_text')
