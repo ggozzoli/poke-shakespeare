@@ -6,9 +6,14 @@ from logging import config
 from flask import Flask
 from flask_injector import FlaskInjector
 from flask_restful import Api
-from injector import Injector, Module
+from injector import Injector, Module, singleton
 
 from api.resources.pokemon_description import PokemonDescriptionResource
+from core.services import DescriptionService
+from core.wrappers import PokemonInfoWrapper, ShakespeareTranslationWrapper
+from services.description_service import DescriptionServiceImpl
+from wrappers.pokemon_info import PokemonInfoWrapperImpl
+from wrappers.shakespeare_translation import ShakespeareTranslationWrapperImpl
 
 with open(os.path.join(os.path.dirname(__file__), '..', 'config', 'logging.conf'), 'rb') as logging_config_file:
     config.dictConfig(json.loads(logging_config_file.read()))
@@ -41,7 +46,9 @@ class ApplicationModule(Module):
         logger.info('Configure application injection module.')
 
     def configure(self, binder):
-        pass
+        binder.bind(interface=DescriptionService, to=DescriptionServiceImpl, scope=singleton)
+        binder.bind(interface=PokemonInfoWrapper, to=PokemonInfoWrapperImpl, scope=singleton)
+        binder.bind(interface=ShakespeareTranslationWrapper, to=ShakespeareTranslationWrapperImpl, scope=singleton)
 
 
 app = Application()
