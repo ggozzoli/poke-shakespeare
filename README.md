@@ -1,2 +1,6 @@
 # poke-shakespeare
 Shakespeare's style Pokémon descriptions
+
+sudo apt install python3-pip
+source venv/bin/activate
+pip3 install -r requirements.txt
