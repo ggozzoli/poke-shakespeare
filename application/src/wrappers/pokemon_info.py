@@ -1,7 +1,9 @@
 import logging
 
 import requests
+from werkzeug.exceptions import NotFound
 
+from core.exceptions import ServiceError
 from core.wrappers import PokemonInfoWrapper
 
 logger = logging.getLogger(f'{__name__}')
@@ -17,8 +19,13 @@ class PokemonInfoWrapperImpl(PokemonInfoWrapper):
 
         url = self._url.format(pokemonName=pokemon_name)
         r = requests.get(url=url)
-        description = self._extract_description(response=r.json())
-        return description
+        if r.status_code == 200:
+            description = self._extract_description(response=r.json())
+            return description
+        elif r.status_code == 404:
+            raise NotFound(description='Pokemon not found.')
+        else:
+            raise ServiceError
 
     @staticmethod
     def _extract_description(response: dict) -> str:

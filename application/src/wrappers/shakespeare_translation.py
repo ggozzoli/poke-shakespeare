@@ -1,7 +1,9 @@
 import logging
 
 import requests
+from werkzeug.exceptions import TooManyRequests
 
+from core.exceptions import ServiceError
 from core.wrappers import ShakespeareTranslationWrapper
 
 logger = logging.getLogger(f'{__name__}')
@@ -16,9 +18,15 @@ class ShakespeareTranslationWrapperImpl(ShakespeareTranslationWrapper):
         logger.debug(f'Translate text to shakespeare (text: {text}).')
 
         body = {'text': text}
+
         r = requests.post(url=self._url, json=body)
-        translation = self._extract_translation(response=r.json())
-        return translation
+        if r.status_code == 200:
+            translation = self._extract_translation(response=r.json())
+            return translation
+        elif r.status_code == 429:
+            raise TooManyRequests
+        else:
+            raise ServiceError
 
     @staticmethod
     def _extract_translation(response: dict) -> str:

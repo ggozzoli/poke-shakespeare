@@ -3,10 +3,12 @@ import logging
 import os
 from logging import config
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_injector import FlaskInjector
 from flask_restful import Api
 from injector import Injector, Module, singleton
+from waitress import serve
+from werkzeug.exceptions import NotFound, TooManyRequests
 
 from api.resources.pokemon_description import PokemonDescriptionResource
 from core.services import DescriptionService
@@ -53,5 +55,17 @@ class ApplicationModule(Module):
 
 app = Application()
 
+
+@app.errorhandler(NotFound)
+def handle_exception(e):
+    return jsonify({"error": e.description}), e.code
+
+
+@app.errorhandler(TooManyRequests)
+def handle_exception(e):
+    return jsonify({"error": e.description}), e.code
+
+
 if __name__ == '__main__':
-    app.run(port=5000)
+    logger.info('Application is running.')
+    serve(app, host='0.0.0.0', port=5000)

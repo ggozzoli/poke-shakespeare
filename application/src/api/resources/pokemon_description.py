@@ -19,8 +19,4 @@ class PokemonDescriptionResource(Resource):
 
         description = self._description_service.get_shakespeare_description(pokemon_name=pokemon_name)
 
-        representation = {
-            'name': pokemon_name,
-            'description': description
-        }
-        return representation
+        return {'name': pokemon_name, 'description': description}
