@@ -18,7 +18,6 @@ class ShakespeareTranslationWrapperImpl(ShakespeareTranslationWrapper):
         logger.debug(f'Translate text to shakespeare (text: {text}).')
 
         body = {'text': text}
-
         r = requests.post(url=self._url, json=body)
         if r.status_code == 200:
             translation = self._extract_translation(response=r.json())

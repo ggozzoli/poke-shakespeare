@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 import requests
 from werkzeug.exceptions import NotFound
@@ -27,9 +28,13 @@ class PokemonInfoWrapperImpl(PokemonInfoWrapper):
         else:
             raise ServiceError
 
-    @staticmethod
-    def _extract_description(response: dict) -> str:
+    def _extract_description(self, response: dict) -> str:
         descriptions = response.get('flavor_text_entries')
         for description in descriptions:
             if description.get('language').get('name') == 'en':
-                return description.get('flavor_text')
+                return self._replace_control_characters(description.get('flavor_text'))
+
+    @staticmethod
+    def _replace_control_characters(text: str) -> Optional[str]:
+        if text:
+            return text.replace('\n', ' ').replace('\f', ' ')
