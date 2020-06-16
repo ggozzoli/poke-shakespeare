@@ -50,4 +50,6 @@ Shakespeare's style Pokémon descriptions!
   - **Shakespeare translator**: https://funtranslations.com/api/shakespeare
 
 ### Notes:
-poke-shakespeare has a limit of 5 requests per hour per user, due to the shakespeare translator API usage limit. Exceeding the limit will result in a HTTP 429 response.
+poke-shakespeare has a limit of 5 requests per hour per user, due to the shakespeare translator API usage limit. 
+Pokémon descriptions are cached, only requests for new Pokémon will be considered for the limit count. 
+Exceeding the limit will result in a HTTP 429 response.
