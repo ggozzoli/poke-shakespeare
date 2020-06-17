@@ -1,6 +1,11 @@
 # poke-shakespeare
 Shakespeare's style Pokémon descriptions!
 
+### Technologies:
+- Python 3.8
+- Flask 1.1.2
+- Redis 6.0.5
+
 ### API Requirements:
 
 - Retrieve Shakespearean description of a Pokémon given its name.
